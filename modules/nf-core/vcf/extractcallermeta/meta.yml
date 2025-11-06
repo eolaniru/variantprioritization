@@ -10,6 +10,7 @@ tools:
       description: |
         Extracts variant caller metadata (name, version, reference, command) from VCF file headers.
         Supports multiple variant callers including DRAGEN, Mutect2, Strelka, DeepVariant, FreeBayes, and bcftools.
+        Preserves original reference genome names as they appear in the VCF headers.
       homepage: https://github.com/nf-core/modules
       documentation: https://github.com/nf-core/modules/tree/master/modules/nf-core/vcf/extractcallermeta
       licence: ["MIT"]

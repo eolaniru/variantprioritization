@@ -6,7 +6,7 @@ This module extracts variant caller metadata from VCF file headers. It parses VC
 
 - **Caller**: The variant calling software used (e.g., Mutect2, DeepVariant, Strelka, DRAGEN, FreeBayes, bcftools)
 - **Version**: The version of the variant caller
-- **Reference**: The reference genome used (standardized to common names like GRCh38, GRCh37)
+- **Reference**: The reference genome used (preserved as it appears in the VCF header)
 - **Command**: The command line used to generate the VCF (when available)
 - **Source**: The raw source line from the VCF header
 
@@ -21,17 +21,15 @@ The module has been tested and optimized for:
 - **FreeBayes**: Detects from `##source=freeBayes` header lines
 - **bcftools**: Detects from `##bcftools_version` and `##bcftools_command` header lines
 
-## Reference Genome Standardization
+## Reference Genome Handling
 
-The module standardizes reference genome names to common conventions:
+The module preserves the exact reference genome names as they appear in the VCF headers, without standardization. This ensures that the original information from the variant caller is maintained.
 
-| Input Patterns | Standardized Output |
-|----------------|-------------------|
-| hg19, GRCh37, b37 | GRCh37 |
-| hg38, GRCh38, hg38_no_alt | GRCh38 |
-| mm9, GRCm37 | GRCm37 |
-| mm10, GRCm38 | GRCm38 |
-| mm39, GRCm39 | GRCm39 |
+Examples:
+- `file:///opt/gatk/resources/Homo_sapiens_assembly38.fasta` → `file:///opt/gatk/resources/Homo_sapiens_assembly38.fasta`
+- `/data/reference/hg38.fa` → `/data/reference/hg38.fa`
+- `GRCh38` → `GRCh38`
+- `hg19` → `hg19`
 
 ## Usage
 
@@ -107,28 +105,28 @@ nextflow run test_simple.nf
 ```
 caller  Mutect2
 version 4.2.6.1
-reference       GRCh38
+reference       file:///opt/gatk/resources/Homo_sapiens_assembly38.fasta
 ```
 
 ### DRAGEN
 ```
 caller  DRAGEN
 version 07.021.624.3.10.9
-reference       GRCh38
+reference       file:///staging/reference/hg38_alt_aware_nohla/reference.fa
 ```
 
 ### DeepVariant
 ```
 caller  DeepVariant
 version v1.5.0
-reference       GRCh38
+reference       file:///opt/deepvariant/reference/GRCh38_no_alt_analysis_set.fasta
 ```
 
 ### Strelka
 ```
 caller  Strelka
 version v2.9.10
-reference       GRCh38
+reference       file:///data/reference/hg38.fa
 ```
 
 This module is designed to be a reusable nf-core module that can be easily integrated into variant calling pipelines to track and document the tools used for variant calling.

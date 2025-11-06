@@ -185,29 +185,10 @@ process VCF_EXTRACTCALLERMETA {
             caller=substr(caller, RSTART, RLENGTH);
         }
         
-        # Standardize reference genome names
-        if (ref != "") {
-            if (match(ref, /(hg19|GRCh37|b37)/)) {
-                ref_standard = "GRCh37";
-            } else if (match(ref, /(hg38|GRCh38|hg38_no_alt)/)) {
-                ref_standard = "GRCh38";
-            } else if (match(ref, /(mm9|GRCm37)/)) {
-                ref_standard = "GRCm37";
-            } else if (match(ref, /(mm10|GRCm38)/)) {
-                ref_standard = "GRCm38";
-            } else if (match(ref, /(mm39|GRCm39)/)) {
-                ref_standard = "GRCm39";
-            } else {
-                ref_standard = ref;
-            }
-        } else {
-            ref_standard = "unknown";
-        }
-        
-        # Output results
+        # Output results - keep original reference names
         print "caller", (caller=="" ? "unknown" : caller) >> OUT;
         print "version", (version=="" ? "unknown" : version) >> OUT;
-        print "reference", ref_standard >> OUT;
+        print "reference", (ref=="" ? "unknown" : ref) >> OUT;
         if (cmd!="") print "command", cmd >> OUT;
         if (src!="") print "source", src >> OUT;
     }
