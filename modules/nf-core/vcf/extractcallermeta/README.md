@@ -74,17 +74,23 @@ source  Mutect2
 
 ## Testing
 
-Run the comprehensive test suite:
+The module includes comprehensive nf-test suites:
 
 ```bash
-nextflow run test_comprehensive.nf
+# Run all tests
+nf-test test tests/main.nf.test
+
+# Run specific test
+nf-test test tests/main.nf.test --tag "mutect2 - vcf"
 ```
 
-Run a simple test:
-
-```bash
-nextflow run test_simple.nf
-```
+Test data includes realistic VCF files from major variant callers:
+- Mutect2 (both .vcf and .vcf.gz)
+- DeepVariant  
+- DRAGEN
+- Strelka
+- FreeBayes
+- bcftools
 
 ## Dependencies
 
