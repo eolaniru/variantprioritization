@@ -1,0 +1,9 @@
+# Local documentation and submission files (not for nf-core submission)
+SUBMISSION_SUMMARY.md
+
+# Temporary testing and development files
+test_*.nf
+.nextflow*
+.nf-test*
+work/
+*.log
