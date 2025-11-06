@@ -34,11 +34,11 @@ process VCF_EXTRACTCALLERMETA {
     fi
 
     # Extract caller metadata using AWK
-    awk -v OFS='\\t' -v OUT="${prefix}.caller_meta.tsv" '
+    awk -v OUT="${prefix}.caller_meta.tsv" '
     BEGIN{
         caller=""; version=""; ref=""; cmd=""; src=""; 
         seen_dragen=0; seen_gatk=0;
-        print "key", "value" > OUT;
+        print "key\\tvalue" > OUT;
     }
 
     # Keep raw source if present (many callers)
@@ -92,18 +92,10 @@ process VCF_EXTRACTCALLERMETA {
     # bcftools detection
     /^##bcftools_version=/ { 
         if (caller=="") caller="bcftools";
-        if (version=="") {
-            version=substr(\$0,21);
-            # Clean version by removing leading spaces and 1 if it starts with 1
-            gsub(/^1/, "", version);
-        }
+        if (version=="") version=substr(\$0,20);
     }
     /^##bcftools_command=/ { 
-        if (cmd=="") {
-            cmd=substr(\$0,21);
-            # Clean up command by removing "m" at the beginning if present
-            gsub(/^m/, "", cmd);
-        }
+        if (cmd=="") cmd=substr(\$0,20);
     }
 
     # DeepVariant detection
@@ -186,11 +178,11 @@ process VCF_EXTRACTCALLERMETA {
         }
         
         # Output results - keep original reference names
-        print "caller", (caller=="" ? "unknown" : caller) >> OUT;
-        print "version", (version=="" ? "unknown" : version) >> OUT;
-        print "reference", (ref=="" ? "unknown" : ref) >> OUT;
-        if (cmd!="") print "command", cmd >> OUT;
-        if (src!="") print "source", src >> OUT;
+        print "caller\\t" (caller=="" ? "unknown" : caller) >> OUT;
+        print "version\\t" (version=="" ? "unknown" : version) >> OUT;
+        print "reference\\t" (ref=="" ? "unknown" : ref) >> OUT;
+        if (cmd!="") print "command\\t" cmd >> OUT;
+        if (src!="") print "source\\t" src >> OUT;
     }
     ' header.txt
 
