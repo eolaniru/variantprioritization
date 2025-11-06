@@ -23,6 +23,7 @@ process VCF_EXTRACTCALLERMETA {
 
     """
     # Extract header from VCF file (handles both .vcf and .vcf.gz)
+    # Use bcftools if available, otherwise fallback to zcat/grep
     if [[ ${vcf} == *.gz ]]; then
         if command -v bcftools &> /dev/null; then
             bcftools view -h ${vcf} > header.txt
@@ -33,15 +34,17 @@ process VCF_EXTRACTCALLERMETA {
         grep '^#' ${vcf} > header.txt
     fi
 
-    # Extract caller metadata using AWK
+    # Extract caller metadata using AWK parser
+    # Supports: GATK/Mutect2, DRAGEN, DeepVariant, Strelka, FreeBayes, bcftools
     awk -v OUT="${prefix}.caller_meta.tsv" '
-    BEGIN{
+    BEGIN {
+        # Initialize variables
         caller=""; version=""; ref=""; cmd=""; src=""; 
         seen_dragen=0; seen_gatk=0;
         print "key\\tvalue" > OUT;
     }
 
-    # Keep raw source if present (many callers)
+    # Keep raw source if present (many callers use this field)
     /^##source=/ { 
         if (src=="") src=substr(\$0,10) 
     }
@@ -60,7 +63,7 @@ process VCF_EXTRACTCALLERMETA {
         }
     }
 
-    # DRAGEN detection (including TSO500)
+    # DRAGEN detection (including TSO500 and other DRAGEN variants)
     /^##DRAGENCommandLine=</ {
         id=""; ver=""; sw="";
         if (match(\$0, /ID=([^,>]+)/)) {
@@ -162,7 +165,7 @@ process VCF_EXTRACTCALLERMETA {
         }
     }
 
-    END{
+    END {
         # Use source as fallback for caller if nothing else found
         if (caller=="" && src!="") {
             if (match(src, /^[^ ]+/)) {
@@ -177,7 +180,7 @@ process VCF_EXTRACTCALLERMETA {
             caller=substr(caller, RSTART, RLENGTH);
         }
         
-        # Output results - keep original reference names
+        # Output results - preserve original reference names 
         print "caller\\t" (caller=="" ? "unknown" : caller) >> OUT;
         print "version\\t" (version=="" ? "unknown" : version) >> OUT;
         print "reference\\t" (ref=="" ? "unknown" : ref) >> OUT;
