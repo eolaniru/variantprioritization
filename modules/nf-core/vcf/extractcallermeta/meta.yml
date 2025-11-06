@@ -1,0 +1,49 @@
+name: vcf_extractcallermeta
+description: Extract variant caller metadata from VCF header
+keywords:
+  - variant calling
+  - metadata extraction
+  - VCF
+  - header parsing
+tools:
+  - extractcallermeta:
+      description: |
+        Extracts variant caller metadata (name, version, reference, command) from VCF file headers.
+        Supports multiple variant callers including DRAGEN, Mutect2, Strelka, DeepVariant, FreeBayes, and bcftools.
+      homepage: https://github.com/nf-core/modules
+      documentation: https://github.com/nf-core/modules/tree/master/modules/nf-core/vcf/extractcallermeta
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: VCF input file (compressed or uncompressed)
+        pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
+output:
+  tsv:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.caller_meta.tsv":
+          type: file
+          description: Tab-separated file containing caller metadata
+          pattern: "*.caller_meta.tsv"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@eolaniru"
+maintainers:
+  - "@eolaniru"

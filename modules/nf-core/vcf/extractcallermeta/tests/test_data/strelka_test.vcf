@@ -1,0 +1,50 @@
+##fileformat=VCFv4.1
+##FILTER=<ID=PASS,Description="All filters passed">
+##FILTER=<ID=LowEVS,Description="Low EVS score">
+##FILTER=<ID=LowDepth,Description="Tumor sample read depth at this locus is below 2">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth for tier1 (used+filtered)">
+##FORMAT=<ID=FDP,Number=1,Type=Integer,Description="Number of basecalls filtered from original read depth for tier1">
+##FORMAT=<ID=SDP,Number=1,Type=Integer,Description="Number of reads with deletions spanning this site at tier1">
+##FORMAT=<ID=SUBDP,Number=1,Type=Integer,Description="Number of reads below tier1 mapping quality threshold aligned across this site">
+##FORMAT=<ID=AU,Number=2,Type=Integer,Description="Number of 'A' alleles used in tiers 1,2">
+##FORMAT=<ID=CU,Number=2,Type=Integer,Description="Number of 'C' alleles used in tiers 1,2">
+##FORMAT=<ID=GU,Number=2,Type=Integer,Description="Number of 'G' alleles used in tiers 1,2">
+##FORMAT=<ID=TU,Number=2,Type=Integer,Description="Number of 'T' alleles used in tiers 1,2">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="Imprecise structural variation">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
+##INFO=<ID=SVLEN,Number=.,Type=Integer,Description="Difference in length between REF and ALT alleles">
+##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="Somatic mutation">
+##INFO=<ID=QSS,Number=1,Type=Integer,Description="Quality score for any somatic snv, ie. for the ALT allele to be present at a significantly different frequency in the tumor and normal">
+##INFO=<ID=TQSS,Number=1,Type=Integer,Description="Data tier used to compute QSS">
+##INFO=<ID=NT,Number=1,Type=String,Description="Genotype of the normal in all data tiers, as used to classify somatic variants. One of {ref,het,hom,conflict}.">
+##INFO=<ID=QSS_NT,Number=1,Type=Integer,Description="Quality score reflecting the joint probability of a somatic variant and NT">
+##INFO=<ID=TQSS_NT,Number=1,Type=Integer,Description="Data tier used to compute QSS_NT">
+##INFO=<ID=SGT,Number=1,Type=String,Description="Most likely somatic genotype excluding normal noise states">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Combined depth across samples">
+##INFO=<ID=MQ,Number=1,Type=Float,Description="RMS Mapping Quality">
+##INFO=<ID=MQ0,Number=1,Type=Integer,Description="Total Mapping Quality Zero Reads">
+##INFO=<ID=ReadPosRankSum,Number=1,Type=Float,Description="Z-score from Wilcoxon rank sum test of Alt Vs. Ref read-position in the tumor">
+##INFO=<ID=SNVSB,Number=1,Type=Float,Description="Somatic SNV site strand bias">
+##INFO=<ID=SomaticEVS,Number=1,Type=Float,Description="Somatic Empirical Variant Score (EVS) expressing the phred-scaled probability of the call being a false positive observation.">
+##source=strelka v2.9.10
+##reference=file:///data/reference/hg38.fa
+##contig=<ID=chr1,length=248956422>
+##contig=<ID=chr2,length=242193529>
+##contig=<ID=chr3,length=198295559>
+##contig=<ID=chr4,length=190214555>
+##contig=<ID=chr5,length=181538259>
+##priorSomaticSnvRate=0.0001
+##content=strelka somatic snv calls
+##germlineSnvTheta=0.001
+##priorSomaticIndelRate=1e-06
+##germlineIndelTheta=0.0001
+##maxInputDepth=10000
+##minTierOneMapq=20
+##minTierTwoMapq=5
+##ssnvPrior=0.000001
+##sindelPrior=0.000001
+##cmdline=/opt/strelka/bin/configureStrelkaSomaticWorkflow.py --normalBam normal.bam --tumorBam tumor.bam --referenceFasta /data/reference/hg38.fa --runDir strelka_results
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NORMAL	TUMOR
+chr1	14522	.	G	A	.	PASS	SOMATIC;QSS=73;TQSS=1;NT=ref;QSS_NT=73;TQSS_NT=1;SGT=GG->AG;DP=72;MQ=60.00;MQ0=0;ReadPosRankSum=1.38;SNVSB=0.00;SomaticEVS=7.92	DP:FDP:SDP:SUBDP:AU:CU:GU:TU:GT	52:0:0:0:0,0:0,0:52,52:0,0:0/0	40:0:0:0:20,20:0,0:20,20:0,0:0/1
+chr7	55249071	.	C	T	.	PASS	SOMATIC;QSS=63;TQSS=1;NT=ref;QSS_NT=63;TQSS_NT=1;SGT=CC->CT;DP=62;MQ=60.00;MQ0=0;ReadPosRankSum=-0.38;SNVSB=0.00;SomaticEVS=6.92	DP:FDP:SDP:SUBDP:AU:CU:GU:TU:GT	34:0:0:0:0,0:34,34:0,0:0,0:0/0	28:0:0:0:0,0:14,14:0,0:14,14:0/1

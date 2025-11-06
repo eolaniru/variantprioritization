@@ -1,0 +1,26 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##FILTER=<ID=RefCall,Description="Genotyping model thinks this site is reference.">
+##FILTER=<ID=LowQual,Description="Confidence in this variant being real is below calling threshold.">
+##ALT=<ID=NON_REF,Description="Represents any possible alternative allele not already represented at this location by REF and ALT">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position (for use with symbolic alleles)">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Conditional genotype quality">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth">
+##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description="Minimum DP observed within the GVCF block.">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Read depth for each allele">
+##FORMAT=<ID=VAF,Number=A,Type=Float,Description="Variant allele fractions.">
+##FORMAT=<ID=GL,Number=G,Type=Float,Description="Genotype likelihoods, log10 encoded">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Genotype likelihoods, Phred encoded">
+##source=DeepVariant v1.5.0
+##reference=file:///opt/deepvariant/reference/GRCh38_no_alt_analysis_set.fasta
+##contig=<ID=chr1,length=248956422,assembly=GRCh38>
+##contig=<ID=chr2,length=242193529,assembly=GRCh38>
+##contig=<ID=chr3,length=198295559,assembly=GRCh38>
+##contig=<ID=chr4,length=190214555,assembly=GRCh38>
+##contig=<ID=chr5,length=181538259,assembly=GRCh38>
+##DeepVariant_version=1.5.0
+##DV_cmdline="/opt/deepvariant/bin/run_deepvariant --model_type=WGS --ref=/opt/deepvariant/reference/GRCh38_no_alt_analysis_set.fasta --reads=sample.bam --output_vcf=deepvariant.vcf.gz --output_gvcf=deepvariant.gvcf.gz --num_shards=64"
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE
+chr1	14522	.	G	A	47.4	PASS	.	GT:GQ:DP:AD:VAF:PL	0/1:47:25:12,13:0.52:47,0,46
+chr7	55249071	.	C	T	59.4	PASS	.	GT:GQ:DP:AD:VAF:PL	1/1:59:30:0,30:1.00:59,90,0

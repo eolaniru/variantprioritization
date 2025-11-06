@@ -1,0 +1,248 @@
+nextflow_process {
+
+    name "Test Process VCF_EXTRACTCALLERMETA"
+    script "../main.nf"
+    process "VCF_EXTRACTCALLERMETA"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "vcf"
+    tag "vcf/extractcallermeta"
+
+    test("mutect2 - vcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"mutect2_test"],
+                    file("${moduleDir}/tests/test_data/mutect2_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("mutect2_vcf") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tMutect2")
+                    assert tsv_content.contains("version\t4.2.6.1")
+                    assert tsv_content.contains("reference\tfile:///ref/hg38.fa")
+                }
+            )
+        }
+    }
+
+    test("mutect2 - vcf.gz") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"mutect2_test_gz"],
+                    file("${moduleDir}/tests/test_data/mutect2_test.vcf.gz", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("mutect2_vcf_gz") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tMutect2")
+                    assert tsv_content.contains("version\t4.2.6.1")
+                }
+            )
+        }
+    }
+
+    test("deepvariant - vcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"deepvariant_test"],
+                    file("${moduleDir}/tests/test_data/deepvariant_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("deepvariant_vcf") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tDeepVariant")
+                    assert tsv_content.contains("version\tv1.5.0")
+                    assert tsv_content.contains("reference\tfile:///ref/GRCh38_no_alt_analysis_set.fasta")
+                }
+            )
+        }
+    }
+
+    test("deepvariant - vcf.gz") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"deepvariant_test_gz"],
+                    file("${moduleDir}/tests/test_data/deepvariant_test.vcf.gz", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("deepvariant_vcf_gz") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tDeepVariant")
+                    assert tsv_content.contains("version\tv1.5.0")
+                }
+            )
+        }
+    }
+
+    test("strelka - vcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"strelka_test"],
+                    file("${moduleDir}/tests/test_data/strelka_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("strelka_vcf") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tstrelka")
+                    assert tsv_content.contains("version\tv2.9.10")
+                    assert tsv_content.contains("reference\t/ref/hg38.fa")
+                }
+            )
+        }
+    }
+
+    test("freebayes - vcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"freebayes_test"],
+                    file("${moduleDir}/tests/test_data/freebayes_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("freebayes_vcf") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tfreeBayes")
+                    assert tsv_content.contains("version\tv1.3.6")
+                    assert tsv_content.contains("reference\t/ref/hg38.fa")
+                }
+            )
+        }
+    }
+
+    test("bcftools - vcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"bcftools_test"],
+                    file("${moduleDir}/tests/test_data/bcftools_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("bcftools_vcf") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tbcftools")
+                    assert tsv_content.contains("version\t1.15.1+htslib-1.15.1")
+                    assert tsv_content.contains("reference\t/ref/hg38.fa")
+                }
+            )
+        }
+    }
+
+    test("dragen - vcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"dragen_test"],
+                    file("${moduleDir}/tests/test_data/dragen_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("dragen_vcf") },
+                { 
+                    def tsv_content = path(process.out.tsv[0][1]).readLines()
+                    assert tsv_content.contains("caller\tDRAGEN")
+                    assert tsv_content.contains("version\t07.021.624.3.10.9")
+                    assert tsv_content.contains("reference\tfile:///ref/hg38/reference.fa")
+                }
+            )
+        }
+    }
+
+    test("mutect2 - vcf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"mutect2_test"],
+                    file("${moduleDir}/tests/test_data/mutect2_test.vcf", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("mutect2_vcf_stub") }
+            )
+        }
+    }
+}

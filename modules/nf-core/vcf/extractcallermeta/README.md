@@ -1,0 +1,134 @@
+# VCF Extract Caller Meta Module
+
+## Description
+
+This module extracts variant caller metadata from VCF file headers. It parses VCF header information to identify:
+
+- **Caller**: The variant calling software used (e.g., Mutect2, DeepVariant, Strelka, DRAGEN, FreeBayes, bcftools)
+- **Version**: The version of the variant caller
+- **Reference**: The reference genome used (standardized to common names like GRCh38, GRCh37)
+- **Command**: The command line used to generate the VCF (when available)
+- **Source**: The raw source line from the VCF header
+
+## Supported Variant Callers
+
+The module has been tested and optimized for:
+
+- **GATK/Mutect2**: Detects from `##GATKCommandLine` header lines
+- **DRAGEN**: Detects from `##DRAGENCommandLine` header lines (including TSO500)
+- **DeepVariant**: Detects from `##source=DeepVariant` header lines
+- **Strelka**: Detects from `##source=strelka` header lines
+- **FreeBayes**: Detects from `##source=freeBayes` header lines
+- **bcftools**: Detects from `##bcftools_version` and `##bcftools_command` header lines
+
+## Reference Genome Standardization
+
+The module standardizes reference genome names to common conventions:
+
+| Input Patterns | Standardized Output |
+|----------------|-------------------|
+| hg19, GRCh37, b37 | GRCh37 |
+| hg38, GRCh38, hg38_no_alt | GRCh38 |
+| mm9, GRCm37 | GRCm37 |
+| mm10, GRCm38 | GRCm38 |
+| mm39, GRCm39 | GRCm39 |
+
+## Usage
+
+### Basic Usage
+
+```nextflow
+include { VCF_EXTRACTCALLERMETA } from './modules/nf-core/vcf/extractcallermeta/main'
+
+workflow {
+    vcf_ch = Channel.fromPath("*.vcf*").map { file ->
+        def meta = [id: file.baseName]
+        [meta, file]
+    }
+    
+    VCF_EXTRACTCALLERMETA(vcf_ch)
+}
+```
+
+### Input
+
+- `tuple val(meta), path(vcf)`: A tuple containing sample metadata and VCF file path
+  - `meta`: A Groovy Map containing sample information (e.g., `[id: 'sample1']`)
+  - `vcf`: Path to VCF file (`.vcf` or `.vcf.gz`)
+
+### Output
+
+- `tuple val(meta), path("*.caller_meta.tsv")`: TSV file containing extracted metadata
+- `path("versions.yml")`: File containing software versions
+
+### Output Format
+
+The output TSV file contains the following fields:
+
+```
+key     value
+caller  Mutect2
+version 4.2.6.1
+reference       GRCh38
+command gatk --java-options -Xmx4g Mutect2 --reference hg38.fa --input tumor.bam
+source  Mutect2
+```
+
+## Testing
+
+Run the comprehensive test suite:
+
+```bash
+nextflow run test_comprehensive.nf
+```
+
+Run a simple test:
+
+```bash
+nextflow run test_simple.nf
+```
+
+## Dependencies
+
+- **bcftools** (optional): For handling compressed VCF files. If not available, the module falls back to `zcat`.
+- **gawk/awk**: For parsing VCF headers
+
+## Implementation Notes
+
+- Handles both compressed (.vcf.gz) and uncompressed (.vcf) files
+- Uses AWK for efficient header parsing
+- Follows nf-core module conventions
+- Includes comprehensive error handling
+- Supports stub runs for testing
+
+## Example Output for Different Callers
+
+### Mutect2
+```
+caller  Mutect2
+version 4.2.6.1
+reference       GRCh38
+```
+
+### DRAGEN
+```
+caller  DRAGEN
+version 07.021.624.3.10.9
+reference       GRCh38
+```
+
+### DeepVariant
+```
+caller  DeepVariant
+version v1.5.0
+reference       GRCh38
+```
+
+### Strelka
+```
+caller  Strelka
+version v2.9.10
+reference       GRCh38
+```
+
+This module is designed to be a reusable nf-core module that can be easily integrated into variant calling pipelines to track and document the tools used for variant calling.
